@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <title>Chilli's Student Grade Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            background-color: #cecece;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .grade-input {
+            margin: 5px 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        th, td {
+            border: 1px solid #fc1818;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #043b06;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Student Grade Calculator</h1>
+   
+        <div class="form-group">
+            <h2>Student Information</h2>
+            <label for="name">Name:</label>
+            <input type="text" id="name" required><br>
+            
+            <label for="studentId">Student ID:</label>
+            <input type="text" id="studentId" required><br>
+            
+            <!-- For aesthetic, I added these for extra -->
+            <label for="course">Course:</label>
+            <input type="text" id="course" required>
+        </div>
+
+        <div class="form-group">
+            <h2>Enter Grades</h2>
+            <div id="gradeInputs">
+            </div>
+        </div>
+
+        <button onclick="calculateGWA()">Calculate GWA</button>
+
+      
+        <div id="results" style="display: none;">
+            <h2>Results</h2>
+            <div id="studentInfo"></div>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Subject</th>
+                        <th>Units</th>
+                        <th>Grade</th>
+                    </tr>
+                </thead>
+                <tbody id="gradeTable">
+                </tbody>
+            </table>
+            <h3>General Weighted Average: <span id="gwa"></span></h3>
+        </div>
+    </div>
+
+    <script>
+        const subjects = ["Filipino", "Science", "English", "ICT", "Math", "PE"];
+        const units = [3, 3, 3, 3, 3, 3];
+
+        // Use parts of these from project
+        window.onload = function() {
+            const gradeInputs = document.getElementById('gradeInputs');
+            subjects.forEach((subject, index) => {
+                gradeInputs.innerHTML += `
+                    <div class="grade-input">
+                        <label for="${subject}">${subject} (${units[index]} units):</label>
+                        <input type="number" id="${subject}" min="0" max="100" required>
+                    </div>
+                `;
+            });
+        };
+
+        function calculateGWA() {
+            const name = document.getElementById('name').value;
+            const studentId = document.getElementById('studentId').value;
+            const course = document.getElementById('course').value;
+
+            if (!name || !studentId || !course) {
+                alert('Please fill in all student information!');
+                return;
+            }
+
+            let totalWeightedGrade = 0;
+            let totalUnits = 0;
+            const grades = [];
+
+            for (let i = 0; i < subjects.length; i++) {
+                const grade = parseFloat(document.getElementById(subjects[i]).value);
+                if (isNaN(grade) || grade < 0 || grade > 100) {
+                    alert(`Please enter a valid grade for ${subjects[i]} (0-100)`);
+                    return;
+                }
+                grades.push(grade);
+                totalWeightedGrade += grade * units[i];
+                totalUnits += units[i];
+            }
+
+            const gwa = totalWeightedGrade / totalUnits;
+
+            displayResults(name, studentId, course, grades, gwa);
+        }
+
+        function displayResults(name, studentId, course, grades, gwa) {
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('studentInfo').innerHTML = `
+                <p><strong>Name:</strong> ${name}</p>
+                <p><strong>Student ID:</strong> ${studentId}</p>
+                <p><strong>Course:</strong> ${course}</p>
+            `;
+
+            const gradeTable = document.getElementById('gradeTable');
+            gradeTable.innerHTML = '';
+            for (let i = 0; i < subjects.length; i++) {
+                gradeTable.innerHTML += `
+                    <tr>
+                        <td>${subjects[i]}</td>
+                        <td>${units[i]}</td>
+                        <td>${grades[i].toFixed(2)}</td>
+                    </tr>
+                `;
+            }
+
+            document.getElementById('gwa').textContent = gwa.toFixed(2);
+        }
+    </script>
+</body>
+</html>

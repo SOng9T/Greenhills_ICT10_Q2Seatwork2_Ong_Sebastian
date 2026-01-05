@@ -81,6 +81,7 @@
                 </tbody>
             </table>
             <h3>General Weighted Average: <span id="gwa"></span></h3>
+            <h3>Status: <span id="status"></span></h3>
         </div>
     </div>
 
@@ -139,6 +140,7 @@
                 <p><strong>Course:</strong> ${course}</p>
             `;
 
+            // For Mr. Ortiz: here's the grade table! :>
             const gradeTable = document.getElementById('gradeTable');
             gradeTable.innerHTML = '';
             for (let i = 0; i < subjects.length; i++) {
@@ -152,6 +154,9 @@
             }
 
             document.getElementById('gwa').textContent = gwa.toFixed(2);
+
+            const status = gwa > 74 ? "PASSED" : "FAILED";
+            document.getElementById('status').textContent = status;
         }
     </script>
 </body>

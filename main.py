@@ -45,3 +45,9 @@ for i in range(len(subjects)):
 
 print("\n=== General Weighted Average ===")
 print(f"GWA: {gwa:.2f}")
+
+# Conditional statement hehe
+if gwa > 74:
+    print("PASSED")
+else:
+    print("FAILED")
